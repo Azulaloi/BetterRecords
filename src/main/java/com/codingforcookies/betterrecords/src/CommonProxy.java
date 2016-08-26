@@ -1,11 +1,14 @@
 package com.codingforcookies.betterrecords.src;
 
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+
 public class CommonProxy {
-	public void preInit() {
+	public void preInit(FMLPreInitializationEvent event) {
 		
 	}
 	
-	public void init() {
+	public void init(FMLInitializationEvent event) {
 		
 	}
 }

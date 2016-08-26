@@ -81,7 +81,7 @@ public class BetterRecords {
 	@EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
 
-		proxy.preInit();
+		proxy.preInit(event);
 	}
 	
 	@EventHandler
@@ -143,7 +143,7 @@ public class BetterRecords {
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		
-		proxy.init();
+		proxy.init(event);
 	}
 	
 	@EventHandler

@@ -1,5 +1,23 @@
 package com.codingforcookies.betterrecords.src.client;
 
+import com.codingforcookies.betterrecords.src.BetterRecords;
+import com.codingforcookies.betterrecords.src.CommonProxy;
+import com.codingforcookies.betterrecords.src.LibrarySong;
+import com.codingforcookies.betterrecords.src.client.models.*;
+import com.codingforcookies.betterrecords.src.client.sound.SoundHandler;
+import com.codingforcookies.betterrecords.src.items.*;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import org.lwjgl.input.Keyboard;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,39 +25,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-
-import org.lwjgl.input.Keyboard;
-
-import com.codingforcookies.betterrecords.src.BetterRecords;
-import com.codingforcookies.betterrecords.src.CommonProxy;
-import com.codingforcookies.betterrecords.src.LibrarySong;
-import com.codingforcookies.betterrecords.src.client.models.BlockFrequencyTunerRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockLazerClusterRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockLazerRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockRadioRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockRecordEtcherRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockRecordPlayerRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockRecordSpeakerRenderer;
-import com.codingforcookies.betterrecords.src.client.models.BlockStrobeLightRenderer;
-import com.codingforcookies.betterrecords.src.client.sound.SoundHandler;
-import com.codingforcookies.betterrecords.src.items.TileEntityFrequencyTuner;
-import com.codingforcookies.betterrecords.src.items.TileEntityLazer;
-import com.codingforcookies.betterrecords.src.items.TileEntityLazerCluster;
-import com.codingforcookies.betterrecords.src.items.TileEntityRadio;
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordEtcher;
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordSpeaker;
-import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
-
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
 	public static ClientProxy instance;
@@ -70,8 +55,9 @@ public class ClientProxy extends CommonProxy {
 	public static boolean playWhileDownload = false;
 	public static int downloadMax = 10;
 	public static int flashyMode = -1;
-	
-	public void preInit() {
+
+	@Override
+	public void preInit(FMLPreInitializationEvent event) {
 		defaultLibrary = new ArrayList<LibrarySong>();
 		encodings = new ArrayList<String>();
 		encodings.add("audio/ogg");
@@ -91,10 +77,11 @@ public class ClientProxy extends CommonProxy {
 		tutorials.put("lazercluster", false);
 		
 		SoundHandler.initalize();
-		loadConfig();
+		loadConfig(event);
 	}
-	
-	public void init() {
+
+	@Override
+	public void init(FMLInitializationEvent event) {
 		instance = this;
 		
 		keyConfig = new KeyBinding("key.betterconfig.desc", Keyboard.KEY_N, "key.betterconfig.category");
@@ -142,8 +129,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockLazerCluster), new ClientItemRenderer());
 	}
 	
-	public static void loadConfig() {
-		config = new Configuration(new File(Minecraft.getMinecraft().mcDataDir, "betterrecords/config.cfg"));
+	public static void loadConfig(FMLPreInitializationEvent event) {
+		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
 		SoundHandler.downloadSongs = config.get(Configuration.CATEGORY_GENERAL, "downloadSongs", true).getBoolean(true);
