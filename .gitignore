@@ -1,6 +1,45 @@
-/*
-!.gitignore
-!build/libs/
-!lib/
-!src/
-!betterrecords/
+## OS
+*/.DS_Store
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+## Gradle
+/.gradle
+/build/
+/libs/
+/run*/
+/ui/
+*.launch
+gradle-app.setting
+
+### IDEs
+## Idea
+.idea/
+/*.iml
+/*.ipr
+/*.iws
+## Eclipse
+/.classpath
+/.project
+/.settings/
+/eclipse/
+/debug/
+*.lock
+/.metadata/
+/config/
+/logs/
+options.txt
+/saves/
+/out
+/src_old
+/resources_old
+/resources/assets/tinker
+/resources/assets/unused
+/design
+## VIM
+*~
