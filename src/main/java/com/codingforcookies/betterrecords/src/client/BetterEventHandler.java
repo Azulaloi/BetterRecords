@@ -1,16 +1,8 @@
 package com.codingforcookies.betterrecords.src.client;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map.Entry;
-import java.util.Scanner;
-
-import org.lwjgl.opengl.GL11;
-
 import com.codingforcookies.betterrecords.src.BetterRecords;
 import com.codingforcookies.betterrecords.src.BetterUtils;
+import com.codingforcookies.betterrecords.src.CurseModInfo;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
@@ -18,7 +10,6 @@ import com.codingforcookies.betterrecords.src.client.sound.FileDownloader;
 import com.codingforcookies.betterrecords.src.client.sound.SoundHandler;
 import com.codingforcookies.betterrecords.src.client.sound.SoundManager;
 import com.codingforcookies.betterrecords.src.items.ItemRecordWire;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -36,6 +27,14 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map.Entry;
 
 public class BetterEventHandler{
 
@@ -276,21 +275,18 @@ public class BetterEventHandler{
 					new Thread(){
 
 						public void run(){
-							Scanner scan = null;
-							try{
-								scan = new Scanner(new URL("https://raw.githubusercontent.com/stumblinbear/Versions/master/betterrecords/betterrecords.version").openStream());
-								String curVersion = scan.next();
-								System.out.println(curVersion.trim() + " : " + BetterRecords.VERSION);
-								if(!curVersion.trim().equals(BetterRecords.VERSION)){
+							try {
+								URL url = new URL("http://widget.mcf.li/mc-mods/minecraft/222722-better-records.json");
+								String latestVersion = CurseModInfo.fromURL(url).getNewestVersion(MinecraftForge.MC_VERSION).getModVersion();
+								String modVersion = BetterRecords.VERSION;
+								if (!latestVersion.trim().equals(BetterRecords.VERSION)) {
 									Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("msg.newversion.txt"));
-									Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("       " + BetterUtils.getTranslatedString("overlay.curversion") + ": " + curVersion));
+									Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("       " + BetterUtils.getTranslatedString("overlay.curversion") + ": " + latestVersion));
 								}
-							}catch(MalformedURLException e){
+							} catch (MalformedURLException e) {
 								e.printStackTrace();
-							}catch(IOException e){
+							} catch (IOException e) {
 								e.printStackTrace();
-							}finally{
-								scan.close();
 							}
 						}
 					}.start();
